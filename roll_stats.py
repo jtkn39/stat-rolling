@@ -25,18 +25,27 @@ def roll_4d6_drop_lowest_reroll_ones():
     rolls = np.random.randint(low=2, high=7, size=(6, 4))
     rolls = np.sort(rolls, axis=1)[:,1:]
     return rolls.sum(axis=1)
+
+def roll_2d10():
+    rolls = np.random.randint(low=1, high=11, size=(6, 2))
+    return rolls.sum(axis=1)
+                             
     
 
-
+stat_names = ['Strength', 'Dexterity', 'Constiution',
+              'Intelligence', 'Widsom', 'Charisma']
 method_dict = {'Roll 3d6': roll_3d6,
                'Roll 3d6 reroll ones': roll_3d6_reroll_ones,
                'Roll 2d6 plus six': roll_2d6_plus_six,
                'Roll 4d6 drop lowest': roll_4d6_drop_lowest,
-               'Roll 4d6 drop lowest reroll ones': roll_4d6_drop_lowest_reroll_ones}
+               'Roll 4d6 drop lowest reroll ones': roll_4d6_drop_lowest_reroll_ones,
+               'Roll 2d10': roll_2d10}
 method_name = st.selectbox('Choose a method to roll stats', list(method_dict.keys()))
 method = method_dict[method_name]
 
-mercy = st.checkbox('Is your god a merciful god?')
+col1, col2 = st.columns(2)
+mercy = col1.checkbox('Is your god a merciful god?')
+in_order = col2.checkbox('Generate stats in order?')
 
 if st.button('Roll!'):
     
@@ -53,11 +62,14 @@ if st.button('Roll!'):
     for i, column in enumerate(columns):
         with st.spinner(text='Rolling rolling rolling...'):
             time.sleep(1.0)
-        column.metric('Roll %d'%(i+1), my_rolls[i])
+        if in_order:
+            column.metric(stat_names[i], my_rolls[i])
+        else:
+            column.metric('Roll %d'%(i+1), my_rolls[i])
         
     st.balloons()
         
-    with st.expander('How good is my roll?'):
+    with st.expander('How good are my rolls?'):
         
         num_sim = 5000
         max_scores = np.zeros(num_sim, dtype=np.int32)
@@ -84,8 +96,8 @@ if st.button('Roll!'):
         max_pc = stats.percentileofscore(max_scores, my_max, kind='weak')
         top_three_pc = stats.percentileofscore(top_three, my_top_three, kind='weak')
         total_pc = stats.percentileofscore(total, my_total, kind='weak')
-        st.write('Your highest stat is in the %.1f percentile'%max_pc)
-        st.write('The sum of your three best stats is in the %.1f percentile'%top_three_pc)
-        st.write('The sum of your stats is in the %.1f percentile'%total_pc)
+        st.write('Highest stat percentile: %.1f'%max_pc)
+        st.write('Sum of your three best stats percentile: %.1f'%top_three_pc)
+        st.write('Sum of your stats percentile %.1f'%total_pc)
     
 
