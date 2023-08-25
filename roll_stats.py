@@ -51,9 +51,11 @@ if st.button('Roll!'):
     
     if mercy:
         maxstat = 0
-        while maxstat<16:
+        minstat = 0
+        while maxstat<16 and minstat<8:
             my_rolls = method()
             maxstat = my_rolls.max()
+            minstat = my_rolls.min()
     else:
         my_rolls = method()
 
@@ -79,9 +81,11 @@ if st.button('Roll!'):
         for i in range(num_sim):
             if mercy:
                 maxstat = 0
-                while maxstat<16:
+                minstat = 0
+                while maxstat<16 and minstat<8:
                     rolls = method()
                     maxstat = rolls.max()
+                    minstat = rolls.min()
             else:
                 rolls = method()
             rolls = np.sort(rolls)
@@ -98,6 +102,6 @@ if st.button('Roll!'):
         total_pc = stats.percentileofscore(total, my_total, kind='weak')
         st.write('Highest stat percentile: %.1f'%max_pc)
         st.write('Sum of your three best stats percentile: %.1f'%top_three_pc)
-        st.write('Sum of your stats percentile %.1f'%total_pc)
+        st.write('Sum of your stats percentile: %.1f'%total_pc)
     
 
