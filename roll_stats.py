@@ -52,7 +52,7 @@ if st.button('Roll!'):
     if mercy:
         maxstat = 0
         minstat = 0
-        while maxstat<16 and minstat<8:
+        while maxstat<16 or minstat<8:
             my_rolls = method()
             maxstat = my_rolls.max()
             minstat = my_rolls.min()
@@ -82,7 +82,7 @@ if st.button('Roll!'):
             if mercy:
                 maxstat = 0
                 minstat = 0
-                while maxstat<16 and minstat<8:
+                while maxstat<16 or minstat<8:
                     rolls = method()
                     maxstat = rolls.max()
                     minstat = rolls.min()
